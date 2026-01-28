@@ -1,3 +1,40 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+  font-family: FiraSansBold;
+  src: url(../public/fonts/Fira_Sans_Condensed/FiraSansCondensed-Bold.ttf);
+}
+@font-face {
+  font-family: FiraSansRegular;
+  src: url(../public/fonts/Fira_Sans_Condensed/FiraSansCondensed-Regular.ttf);
+}
+
+@theme {
+  --color-aqua: #30b7b0; /* Aqua - titles and strong words */
+  --color-dark: #1f2020; /* dark - text in lightMode */
+  --color-white: #f3f3f3; /* white - text in darkmode */
+  --color-lightGray: #e2e2e2; /* lightGray - subtext in darkMode */
+  --color-darkGray: #455860; /* darkGray - subtext in lightmode */
+  --color-light: #e9e8e8; /* light - bg in lightMode */
+  --color-black: #171a22; /* black - bg in darkmode */
+}
+
+body,
+html,
+#root {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 100%;
+  font-family: FiraSansRegular, sans-serif;
+}
+
+#root {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  min-height: 100dvh;
+}
