@@ -1,5 +1,6 @@
 import SearchEvent from "../components/SearchEvent";
 import EventCard from "../components/EventCard";
+import { Link } from "react-router-dom";
 
 export default function Events() {
   const eventData = [
@@ -88,7 +89,9 @@ export default function Events() {
       </div>
       <div className="px-2">
         {eventData.map((event) => (
-          <EventCard key={event.id} eventData={event} />
+          <Link to={`/event/${event.id}`} key={event.id}>
+            <EventCard eventData={event} />
+          </Link>
         ))}
       </div>
     </section>

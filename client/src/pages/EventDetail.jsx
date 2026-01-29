@@ -1,3 +1,6 @@
 export default function EventDetail() {
-  return <div>EventDetail Page</div>;
+  const path = window.location.pathname;
+  const eventId = path.split("/").pop();
+
+  return <div>EventDetail Page {eventId}</div>;
 }
