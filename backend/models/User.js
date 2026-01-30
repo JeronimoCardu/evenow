@@ -2,12 +2,6 @@ const mongoose = require("mongoose");
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
-      type: String,
-      required: true,
-      unique: true,
-      trim: true,
-    },
     name: {
       type: String,
       required: true,
@@ -37,7 +31,7 @@ const userSchema = new mongoose.Schema(
         ref: "Event",
       },
     ],
-    eventsParticipated: [
+    attendingEvents: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Event",
@@ -49,5 +43,5 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model("user", userSchema);
 module.exports = User;

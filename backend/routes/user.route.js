@@ -7,6 +7,7 @@ const {
   getEventByUser,
   getEventsUserAttends,
   createUser,
+  loginUser,
   updateUser,
   deleteUser,
 } = require("../controllers/user.controller");
@@ -19,6 +20,7 @@ router.get("/:id/attending", getEventsUserAttends);
 
 // POST
 router.post("/", createUser);
+router.post("/login", loginUser);
 
 // PUT
 router.put("/:id", updateUser);

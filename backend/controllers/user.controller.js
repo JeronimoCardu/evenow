@@ -1,5 +1,7 @@
-const User = require("../models/user.model");
-const Event = require("../models/event.model");
+const User = require("../models/User");
+const Event = require("../models/Event");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 // GET /users
 exports.getUsers = async (req, res) => {
@@ -47,11 +49,51 @@ exports.getEventsUserAttends = async (req, res) => {
 // POST /users
 exports.createUser = async (req, res) => {
   try {
+    const { email, password } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    req.body.password = hashedPassword;
     const newUser = new User(req.body);
     const savedUser = await newUser.save();
+
+    const userObject = savedUser.toObject();
+    delete userObject.password;
+
+    res.status(201).json({
+      message: "User created successfully",
+      user: userObject,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// POST /users/login
+exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: "Invalid credentials" });
+    }
+
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "1d",
+    });
+    const userObject = user.toObject();
+    delete userObject.password;
+
     res
-      .status(201)
-      .json({ message: "User created successfully", user: savedUser });
+      .status(200)
+      .json({ message: "Login successful", token, user: userObject });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
