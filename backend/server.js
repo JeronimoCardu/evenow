@@ -5,9 +5,20 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 5000;
 
+// Cookie Parser Middleware
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
+
 // Cors Middleware
 const cors = require("cors");
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+    sameSite: "lax",
+    secure: false,
+  }),
+);
 
 // Init Middleware
 app.use(express.json({ extended: false }));

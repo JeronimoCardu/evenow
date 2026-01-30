@@ -26,6 +26,19 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// GET /users/profile
+exports.getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // GET /users/:id/events
 exports.getEventByUser = async (req, res) => {
   try {
@@ -88,12 +101,34 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+
+    res.cookie("token", token, {
+      httpOnly: true, // PREVENTS XSS
+      secure: process.env.NODE_ENV === "production", // USE HTTPS IN PRODUCTION
+      sameSite: "strict", // CSRF PROTECTION
+      maxAge: 24 * 60 * 60 * 1000, // 1 day    // DURATION
+    });
+
     const userObject = user.toObject();
     delete userObject.password;
 
     res
       .status(200)
       .json({ message: "Login successful", token, user: userObject });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+exports.logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      secure: true,
+    });
+    res.status(200).json({ message: "Logout successful" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
