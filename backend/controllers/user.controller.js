@@ -16,7 +16,7 @@ exports.getUsers = async (req, res) => {
 // GET /users/:id
 exports.getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id);
+    const user = await User.findById(req.params.id).select("-password")
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -29,7 +29,7 @@ exports.getUserById = async (req, res) => {
 // GET /users/profile
 exports.getUserProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id).select("-password");
+    const user = await User.findById(req.user.id).select("-password").populate("attendingEvents").populate("myEvents");
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
@@ -147,6 +147,22 @@ exports.updateUser = async (req, res) => {
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+exports.attendEvent = async (req, res) => {
+  try {
+    const user = await User.findByIdAndUpdate(
+      req.params.id,
+      { $addToSet: { attendingEvents: req.body.eventId } },
+      { new: true }
+    );
+
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 

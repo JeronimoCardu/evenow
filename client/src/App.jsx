@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import NavBar from "./components/NavBar.jsx";
 import Footer from "./components/Footer.jsx";
 import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
+import Loading from "./components/Loading.jsx";
 
 import Home from "./pages/Home.jsx";
 import Login from "./pages/auth/Login.jsx";
@@ -19,11 +20,13 @@ import { getProfileFromAPI } from "./api/auth.js";
 import useAuth from "./hooks/useAuth.js";
 import useStore from "./hooks/useStore.js";
 
+import { ToastContainer } from "react-toastify";
+
 export default function App() {
   const setUserData = useAuth((state) => state.setUserData);
   const loading = useStore((state) => state.loading);
   const setLoading = useStore((state) => state.setLoading);
-
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -38,12 +41,15 @@ export default function App() {
     fetchProfile();
   }, []);
 
-  return (
+  return loading ? (
+    <Loading />
+  ) : (
     <>
       <header>
         <NavBar />
       </header>
       <main>
+        <Loading />
         <Routes>
           <Route path="*" element={<Home />} />
           <Route path="/event/:id" element={<EventDetail />} />
@@ -54,8 +60,8 @@ export default function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="create-event" element={<CreateEvent />} />
           </Route>
-          
         </Routes>
+        <ToastContainer />
       </main>
       <Footer />
     </>

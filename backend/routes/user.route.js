@@ -12,6 +12,7 @@ const {
   loginUser,
   logoutUser,
   updateUser,
+  attendEvent,
   deleteUser,
 } = require("../controllers/user.controller");
 
@@ -29,6 +30,7 @@ router.post("/logout", authenticateUser, logoutUser);
 
 // PUT
 router.put("/:id", authenticateUser, updateUser);
+router.put("/:id/attend", authenticateUser, attendEvent);
 
 // DELETE
 router.delete("/:id", authenticateUser, deleteUser);

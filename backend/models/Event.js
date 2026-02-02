@@ -3,8 +3,7 @@ const mongoose = require("mongoose");
 const eventSchema = new mongoose.Schema(
   {
     organizer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     },
     title: {
@@ -45,6 +44,7 @@ const eventSchema = new mongoose.Schema(
     },
     rules: {
       type: [String],
+      default: [],
     },
     guests: [
       {

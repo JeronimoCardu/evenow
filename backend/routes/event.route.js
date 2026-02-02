@@ -5,8 +5,6 @@ const  authenticateUser  = require("../middlewares/auth.middleware");
 const {
   getEvents,
   getEventByID,
-  getEventsByCategory,
-  getEventsByMonth,
   createEvent,
   updateEvent,
   deleteEvent,
@@ -15,8 +13,6 @@ const {
 // GET
 router.get("/", getEvents);
 router.get("/:id", getEventByID);
-router.get("/category/:category", getEventsByCategory);
-router.get("/month/:month", getEventsByMonth);
 
 // POST
 router.post("/", authenticateUser, createEvent);

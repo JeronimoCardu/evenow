@@ -21,7 +21,7 @@ export default function EventCard({ eventData }) {
         <div className="grid grid-cols-[60%_40%] items-end">
           <p className="line-clamp-2 text-gray-400">{eventData.location}</p>
           <p className="text-aqua text-right font-[firaSansBold] text-xl">
-            ${eventData.price}
+            {eventData.price > 0 ? `$${eventData.price}` : "Gratis"}
           </p>
         </div>
       </div>

@@ -21,21 +21,18 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    photo: {
-      type: String,
-      default: "/assets/no-user-img.webp",
-    },
+    
     myEvents: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
+        ref: "event",
         default: [],
       },
     ],
     attendingEvents: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Event",
+        ref: "event",
         default: [],
       },
     ],

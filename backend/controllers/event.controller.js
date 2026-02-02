@@ -23,31 +23,6 @@ exports.getEventByID = async (req, res) => {
   }
 };
 
-// GET /events/category/:category
-exports.getEventsByCategory = async (req, res) => {
-  try {
-    const events = await Event.find({ category: req.params.category });
-    res.status(200).json(events);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
-
-// GET /events/month/:month
-exports.getEventsByMonth = async (req, res) => {
-  try {
-    const month = parseInt(req.params.month, 10);
-    const events = await Event.find({
-      date: {
-        $gte: new Date(new Date().getFullYear(), month - 1, 1),
-        $lt: new Date(new Date().getFullYear(), month, 1),
-      },
-    });
-    res.status(200).json(events);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
 // POST /events
 exports.createEvent = async (req, res) => {
