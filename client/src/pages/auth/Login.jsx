@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getProfileFromAPI, loginToAPI } from "../../api/auth.js";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth.js";
@@ -14,6 +14,7 @@ export default function Login() {
 
   const [formValues, setFormValues] = useState(initalValues);
   const setUserData = useAuth((state) => state.setUserData);
+  const userData = useAuth((state) => state.userData);
 
   const handleLogin = async () => {
     try {
@@ -26,6 +27,12 @@ export default function Login() {
       console.error("Error logging in:", error);
     }
   };
+
+  useEffect(() => {
+    if (userData) {
+      navigate("/");
+    }
+  }, [userData]);
 
   return (
     <section className="mx-4">

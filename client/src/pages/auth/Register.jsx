@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { loginToAPI, registerToAPI, getProfileFromAPI } from "../../api/auth.js";
+import { useState, useEffect } from "react";
+import {
+  loginToAPI,
+  registerToAPI,
+  getProfileFromAPI,
+} from "../../api/auth.js";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../hooks/useAuth.js";
 
@@ -14,13 +18,15 @@ const initalValues = {
 export default function Register() {
   const [formValues, setFormValues] = useState(initalValues);
   const setUserData = useAuth((state) => state.setUserData);
-  
+  const userData = useAuth((state) => state.userData);
+
   const navigate = useNavigate();
-  
+
   const handleRegister = async () => {
     try {
       await registerToAPI(formValues); // Create the user first
-      await loginToAPI({              // Then log them in
+      await loginToAPI({
+        // Then log them in
         email: formValues.email,
         password: formValues.password,
       });
@@ -32,7 +38,11 @@ export default function Register() {
       console.error("Error creating user:", error);
     }
   };
-
+  useEffect(() => {
+    if (userData) {
+      navigate("/");
+    }
+  }, [userData]);
   return (
     <section className="mx-4">
       <img

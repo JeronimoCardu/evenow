@@ -4,6 +4,7 @@ import { useEffect } from "react";
 
 import NavBar from "./components/NavBar.jsx";
 import Footer from "./components/Footer.jsx";
+import ProtectedRoutes from "./components/ProtectedRoutes.jsx";
 
 import Home from "./pages/Home.jsx";
 import Login from "./pages/auth/Login.jsx";
@@ -49,9 +50,11 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* PROTECTED ROUTES */}
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/create-event" element={<CreateEvent />} />
+          <Route path="*" element={<ProtectedRoutes />}>
+            <Route path="profile" element={<Profile />} />
+            <Route path="create-event" element={<CreateEvent />} />
+          </Route>
+          
         </Routes>
       </main>
       <Footer />
