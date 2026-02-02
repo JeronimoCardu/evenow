@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 import NavBar from "./components/NavBar.jsx";
 import Footer from "./components/Footer.jsx";
@@ -13,24 +13,30 @@ import EventDetail from "./pages/EventDetail.jsx";
 import Profile from "./pages/Profile.jsx";
 import CreateEvent from "./pages/CreateEvent.jsx";
 
-import { handleGetProfile } from "./api/auth.js";
+import { getProfileFromAPI } from "./api/auth.js";
+
+import useAuth from "./hooks/useAuth.js";
+import useStore from "./hooks/useStore.js";
 
 export default function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const setUserData = useAuth((state) => state.setUserData);
+  const loading = useStore((state) => state.loading);
+  const setLoading = useStore((state) => state.setLoading);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const userData = await handleGetProfile();
-        setCurrentUser(userData);
+        const userData = await getProfileFromAPI();
+        setUserData(userData);
       } catch (error) {
-        console.error("Error fetching user profile:", error);
+        setUserData(null);
+      } finally {
+        setLoading(false);
       }
     };
     fetchProfile();
   }, []);
 
-  console.log("Current User:", currentUser);
   return (
     <>
       <header>
@@ -44,10 +50,7 @@ export default function App() {
           <Route path="/register" element={<Register />} />
 
           {/* PROTECTED ROUTES */}
-          <Route
-            path="/profile"
-            element={<Profile currentUser={currentUser} />}
-          />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/create-event" element={<CreateEvent />} />
         </Routes>
       </main>

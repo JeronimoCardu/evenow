@@ -1,6 +1,6 @@
 const API_URL = import.meta.env.VITE_API_URL;
 
-export const handleRegister = async (user) => {
+export const registerToAPI = async (user) => {
   try {
     const response = await fetch(`${API_URL}/api/users`, {
       method: "POST",
@@ -19,7 +19,7 @@ export const handleRegister = async (user) => {
   }
 };
 
-export const handleLogin = async (credentials) => {
+export const loginToAPI = async (credentials) => {
   try {
     const response = await fetch(`${API_URL}/api/users/login`, {
       method: "POST",
@@ -39,7 +39,7 @@ export const handleLogin = async (credentials) => {
   }
 };
 
-export const handleGetProfile = async () => {
+export const getProfileFromAPI = async () => {
   try {
     const response = await fetch(`${API_URL}/api/users/profile`, {
       method: "GET",
@@ -48,16 +48,14 @@ export const handleGetProfile = async () => {
       },
       credentials: "include",
     });
-    if (!response.ok) {
-      throw new Error("Failed to fetch profile");
-    }
+
     return response.json();
   } catch (error) {
     console.error("Error fetching profile:", error);
   }
 };
 
-export const handleLogout = async () => {
+export const logoutToAPI = async () => {
   try {
     const response = await fetch(`${API_URL}/api/users/logout`, {
       method: "POST",

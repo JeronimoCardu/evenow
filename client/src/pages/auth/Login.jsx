@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { handleLogin } from "../../api/auth.js";
+import { getProfileFromAPI, loginToAPI } from "../../api/auth.js";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth.js";
 
 const initalValues = {
   email: "",
@@ -9,12 +10,16 @@ const initalValues = {
 };
 
 export default function Login() {
-  const [formValues, setFormValues] = useState(initalValues);
   const navigate = useNavigate();
-  
-  const loginUser = async () => {
+
+  const [formValues, setFormValues] = useState(initalValues);
+  const setUserData = useAuth((state) => state.setUserData);
+
+  const handleLogin = async () => {
     try {
-      await handleLogin(formValues);
+      await loginToAPI(formValues);
+      await setUserData(await getProfileFromAPI());
+
       setFormValues(initalValues);
       navigate("/");
     } catch (error) {
@@ -35,7 +40,7 @@ export default function Login() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          loginUser();
+          handleLogin();
         }}
         className="mx-auto flex w-3/4 flex-col gap-4"
       >

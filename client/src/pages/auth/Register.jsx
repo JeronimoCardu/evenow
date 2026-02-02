@@ -1,7 +1,8 @@
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState } from "react";
-import { handleRegister } from "../../api/auth.js";
+import { loginToAPI, registerToAPI, getProfileFromAPI } from "../../api/auth.js";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../hooks/useAuth.js";
 
 const initalValues = {
   name: "",
@@ -12,10 +13,19 @@ const initalValues = {
 
 export default function Register() {
   const [formValues, setFormValues] = useState(initalValues);
+  const setUserData = useAuth((state) => state.setUserData);
+  
   const navigate = useNavigate();
-  const createUser = async () => {
+  
+  const handleRegister = async () => {
     try {
-      await handleRegister(formValues);
+      await registerToAPI(formValues); // Create the user first
+      await loginToAPI({              // Then log them in
+        email: formValues.email,
+        password: formValues.password,
+      });
+      await setUserData(await getProfileFromAPI()); // Fetch and set user data
+
       setFormValues(initalValues);
       navigate("/");
     } catch (error) {
@@ -36,7 +46,7 @@ export default function Register() {
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          createUser();
+          handleRegister();
         }}
         className="mx-auto flex w-3/4 flex-col gap-4"
       >
