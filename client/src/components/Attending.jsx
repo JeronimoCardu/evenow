@@ -1,6 +1,7 @@
 import useAuth from "../hooks/useAuth.js";
 import { useEffect } from "react";
 import { getProfileFromAPI } from "../api/auth.js";
+import EventCard from "./EventCard.jsx";
 
 export default function Attending() {
   const userData = useAuth((state) => state.userData);
@@ -16,16 +17,11 @@ export default function Attending() {
     };
     fetchAttendingEvents();
   }, []);
-  
+
   return (
     <section>
       {userData?.attendingEvents.map((event, index) => (
-        <div key={index} className="mb-4 border-b pb-4">
-          <h3>{event?.title}</h3>
-          <p>{event?.date}</p>
-          <img src={event?.imageUrl} width={200} />
-          <p>${event?.price}</p>
-        </div>
+        <EventCard key={index} eventData={event} />
       ))}
     </section>
   );

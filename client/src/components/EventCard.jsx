@@ -1,6 +1,10 @@
+import { Link } from "react-router-dom";
+
 export default function EventCard({ eventData }) {
+  
   return (
-    <div
+    <Link
+      to={`/event/${eventData._id}`}
       id={`event-${eventData.id}`}
       className="event-card mb-4 grid h-30 grid-cols-[30%_70%] overflow-hidden rounded-xl shadow-md"
     >
@@ -25,6 +29,6 @@ export default function EventCard({ eventData }) {
           </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

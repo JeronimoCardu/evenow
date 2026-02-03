@@ -1,8 +1,8 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { buyTicketToAPI, getEventByIdFromAPI } from "../api/events";
 import useStore from "../hooks/useStore";
 import { useParams } from "react-router-dom";
-import { toast, Zoom } from "react-toastify";
+import { toast } from "react-toastify";
 
 import { FaLocationDot, FaClock } from "react-icons/fa6";
 import { MdAttachMoney } from "react-icons/md";
@@ -19,6 +19,7 @@ export default function EventDetail() {
   const userData = useAuth((state) => state.userData);
   const setUserData = useAuth((state) => state.setUserData);
 
+  // Fetch event data on component mount
   useEffect(() => {
     async function fetchEventData() {
       try {
@@ -30,10 +31,12 @@ export default function EventDetail() {
       }
     }
     fetchEventData();
-  }, [eventId]);
+  }, [eventId, setCurrentEvent, setLoading]);
 
+  // Handle ticket purchase
   const handleBuyTicket = async () => {
     try {
+      // Prevent duplicate ticket purchases
       if (userData?.attendingEvents.includes(currentEvent._id)) {
         toast.info("¡Ya has comprado una entrada para este evento!", {
           position: "bottom-right",
@@ -47,8 +50,10 @@ export default function EventDetail() {
         });
         throw new Error("User already attending this event");
       }
+      // Proceed with ticket purchase
       const updatedUser = await buyTicketToAPI(currentEvent, userData);
 
+      // Update user data in global state
       setUserData(updatedUser);
       toast.success("¡Entrada comprada con éxito!", {
         position: "bottom-right",
@@ -64,6 +69,11 @@ export default function EventDetail() {
       console.error("Error buying ticket:", error);
     }
   };
+
+  // Check if the user has already bought a ticket for this event
+  const isBought = userData?.attendingEvents.find(
+    (event) => event._id === eventId,
+  );
 
   return (
     <section className="my-6 px-4">
@@ -110,14 +120,17 @@ export default function EventDetail() {
       </div>
       <div>
         <button
-          onClick={() => {
-            handleBuyTicket();
-          }}
-          className="shadow-dark bg-aqua w-full rounded-lg px-6 py-3 font-semibold text-white shadow-sm transition duration-300"
+          disabled={!currentEvent || isBought}
+          onClick={handleBuyTicket}
+          className={`w-full rounded-lg px-6 py-3 font-semibold text-white transition duration-300 ${isBought ? "cursor-not-allowed bg-gray-400" : "bg-aqua shadow-dark"} `}
         >
-          {currentEvent?.price > 0
-            ? "Comprar Entrada"
-            : "Obtener Entrada Gratis"}
+          {!currentEvent
+            ? "Cargando..."
+            : isBought
+              ? "Entrada Comprada"
+              : currentEvent.price > 0
+                ? "Comprar Entrada"
+                : "Obtener Entrada Gratis"}
         </button>
       </div>
     </section>

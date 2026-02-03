@@ -37,11 +37,7 @@ export default function Events() {
       </div>
       <div className="px-2">
         {events.length > 0 ? (
-          events.map((event) => (
-            <Link to={`/event/${event._id}`} key={event._id}>
-              <EventCard eventData={event} />
-            </Link>
-          ))
+          events.map((event) => <EventCard key={event._id} eventData={event} />)
         ) : (
           <p className="text-center">No hay eventos disponibles.</p>
         )}
