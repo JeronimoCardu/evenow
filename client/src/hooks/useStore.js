@@ -7,6 +7,13 @@ const useStore = create((set) => ({
   setEvents: (events) => set({ events }),
   currentEvent: null,
   setCurrentEvent: (event) => set({ currentEvent: event }),
+  searchTerm: {
+    search: "",
+    category: "",
+    month: "",
+    sortPrice: "up-down",
+  },
+  setSearchTerm: (searchTerm) => set({ searchTerm }), 
 }));
 
 export default useStore;

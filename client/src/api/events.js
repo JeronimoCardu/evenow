@@ -2,6 +2,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export const getAllEventsFromAPI = async () => {
   try {
+
     const response = await fetch(`${API_URL}/api/events`, {
       method: "GET",
       headers: {
@@ -44,20 +45,21 @@ export const createEventToAPI = async (eventData) => {
   }
 };
 
-
-
 export const buyTicketToAPI = async (currentEvent, userData) => {
   try {
-    const response = await fetch(`${API_URL}/api/users/${userData._id}/attend`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${API_URL}/api/users/${userData._id}/attend`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          eventId: currentEvent._id,
+        }),
+        credentials: "include",
       },
-      body: JSON.stringify({
-        eventId: currentEvent._id,
-      }),
-      credentials: "include",
-    });
+    );
     return response.json();
   } catch (error) {
     console.error("Error buying ticket:", error);

@@ -23,7 +23,6 @@ exports.getEventByID = async (req, res) => {
   }
 };
 
-
 // POST /events
 exports.createEvent = async (req, res) => {
   try {
